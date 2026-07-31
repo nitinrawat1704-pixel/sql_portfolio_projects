@@ -27,4 +27,16 @@
 -- 🏆 Best-Selling Productt
   select product_name,count(*) as "Best-Selling Product" from store_sales group by 1 having count(*) >1 limit 1;
 
+-----------------------------------------------------------------------------weekly growth city wise---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+select city,week,weekly_sales,lag(weekly_sales) over (partition by city order by week) as "previous week sales",
+(weekly_sales - lag(weekly_sales) over (partition by city order by week) ) as "current - previous ",
+(weekly_sales - lag(weekly_sales) over (partition by city order by week))/lag(weekly_sales) over (partition by city order by week) as"current-previous/previous",
+(weekly_sales - lag(weekly_sales) over (partition by city order by week))/lag(weekly_sales) over (partition by city order by week) * 100 as "(current-previous/previous)*100",
+round((weekly_sales - lag(weekly_sales) over (partition by city order by week))/lag(weekly_sales) over (partition by city order by week),2) * 100 as "rounding of (current-previous/previous)*100",
+concat(round((weekly_sales - lag(weekly_sales) over (partition by city order by week))/lag(weekly_sales) over (partition by city order by week),2) * 100,"%") as "concat(rounding of (current-previous/previous)*100)%",
+concat(round((weekly_sales - lag(weekly_sales) over (partition by city order by week))/lag(weekly_sales) over (partition by city order by week),2) * 100,"%") as "Growth in %"
+from(
+select city,week(order_date) as "week" ,sum(total_amount) as weekly_sales from store_sales group by 1,2 )as t;
+
 
