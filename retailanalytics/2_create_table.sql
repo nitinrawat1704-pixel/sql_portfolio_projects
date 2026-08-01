@@ -1,40 +1,39 @@
-CREATE TABLE bank_transactions
+CREATE TABLE items
 (
-transaction_id INT PRIMARY KEY AUTO_INCREMENT,
+item_id INT PRIMARY KEY AUTO_INCREMENT,
 
-transaction_date DATE,
+item_name VARCHAR(100),
 
-customer_id INT,
+category VARCHAR(50),
 
-customer_name VARCHAR(50),
+brand VARCHAR(50),
 
-gender VARCHAR(10),
+purchase_price DECIMAL(10,2),
 
-age INT,
+selling_price DECIMAL(10,2),
 
-city VARCHAR(40),
+stock_quantity INT,
 
-state VARCHAR(40),
-
-branch_name VARCHAR(50),
-
-account_number VARCHAR(20),
-
-account_type VARCHAR(20),
-
-customer_segment VARCHAR(20),
-
-transaction_type VARCHAR(20),
-
-payment_channel VARCHAR(30),
-
-transaction_amount DECIMAL(12,2),
-
-balance_after_transaction DECIMAL(12,2),
-
-loan_status VARCHAR(20),
-
-credit_score INT,
-
-occupation VARCHAR(40)
+supplier_name VARCHAR(100)
 );
+
+
+CREATE TABLE orders
+(
+order_id INT PRIMARY KEY AUTO_INCREMENT,
+
+order_date DATE,
+
+customer_name VARCHAR(100),
+
+city VARCHAR(50),
+
+payment_mode VARCHAR(30),
+
+quantity INT,
+
+item_id INT,
+
+FOREIGN KEY(item_id)
+REFERENCES items(item_id)
+)
