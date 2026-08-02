@@ -48,7 +48,6 @@ Which customers bought Electronics?
 
 Which customers bought Furniture?
 
-
 select customer_name from  items i inner join orders o on i.item_id=o.item_id where category ='Furniture';
 
 Which brand generated the highest sales quantity?
@@ -67,6 +66,10 @@ Which product has the lowest stock?
 
 	select item_name from items where stock_quantity =(select min(stock_quantity) from items);
 
+Which city purchased the highest quantity?
 
-
-
+	select city,sum(quantity)as c from items i inner join orders o on i.item_id=o.item_id group by 1 having sum(quantity) =
+	(
+	select max(c) from
+	(select city,sum(quantity)as c from items i inner join orders o on i.item_id=o.item_id group by 1)as t
+	); 
