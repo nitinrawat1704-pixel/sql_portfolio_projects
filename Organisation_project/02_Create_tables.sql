@@ -12,4 +12,10 @@ email varchar(100) generated always as (concat(lower(full_name),'@gmail.com')) s
 department varchar(24) default ('Temp') check (department in('Admin','Sales','Finance','IT','Temp','VP')) 
 );
 
+
 alter table employee modify department varchar(24) default("temp") check(department in("Admin","Sales","CEO","VP","IT","Temp","Finance"));
+ALTER TABLE employee
+DROP CHECK employee_chk_2;
+ALTER TABLE employee
+ADD CONSTRAINT employee_chk_2
+CHECK (department IN ('Admin', 'Sales', 'Finance', 'IT', 'Temp', 'VP', 'CEO'));
