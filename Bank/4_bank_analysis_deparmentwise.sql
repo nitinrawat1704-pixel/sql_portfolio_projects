@@ -140,7 +140,14 @@ Average customer age.
 	select round(avg(age),2) from bank_transactions;
 	
 Age-group analysis.
-	select age,sum(transaction_amount) from bank_transactions group by 1 order by 1 asc;
+	
+select case 
+when age>30 then 'young'
+when age between 30 and 40 then 'Adult'
+else 'old'
+end ,count(*),round(sum(transaction_amount))
+from bank_transactions group by 1
+;
 
 City-wise customer count.
 	select city,count(customer_name) as "total no customers" from bank_transactions group by 1 ;
