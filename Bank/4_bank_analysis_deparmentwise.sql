@@ -187,9 +187,19 @@ Lowest-performing branch.&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 	);
 	
 Branch with maximum deposits.
-	
+		
+	#single highest transaction#
 	select branch_name,transaction_amount as "Highest Deposit" from bank_transactions where transaction_amount =
 	(select max(transaction_amount) from bank_transactions where transaction_type="Deposit");
+
+		#branch with maximum total deposit# 
+	
+select branch_name,sum(transaction_amount) as "Highest Deposit" from bank_transactions group by 1 having sum(transaction_amount)=
+	(select max(ta) from 
+	(
+    select branch_name,sum(transaction_amount) as "ta" from bank_transactions where transaction_type="Deposit" group by 1) as t
+    )
+    ;
 	
 Branch with maximum withdrawals.
 	
