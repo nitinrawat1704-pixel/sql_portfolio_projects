@@ -1,0 +1,26 @@
+/*Department-wise salary ranking*/
+select full_name,department,sal,rank()over (partition by department order by sal desc)  as "rank" from employee;
+/*Overall salary ranking*/
+select full_name,sal,dense_rank()over(order by sal desc) as dn from employee;
+/*Assign a row number to employees by salary*/
+select full_name,department,sal,row_number()over(order by sal desc) as rn from employee;
+/*Department-wise employee sequence*/
+select *,row_number() over(partition by department order by DOJ asc) from employee;
+/*Compare employee salary with department average*/
+select full_name,department,sal,round(avg(sal)over(partition by department)) as "avg of dept" from employee;
+/*Find the highest-paid employee in each department*/
+select * from
+(
+select full_name,department,sal,max(sal)over(partition by department order by sal desc) as highest_sal,dense_rank()over(partition by department order by sal desc) as rn from employee
+)as t having rn =1;
+/*Top 2 highest-paid employees from each department*/
+select * from
+(
+select full_name,department,sal,dense_rank()over(partition by department order by sal desc) as rn from employee
+)as t having rn <3;
+/*Compare salary with the previous employee*/
+select full_name,sal,lag(sal)over(order by sal desc) as "previous sal" ,lag(sal)over(order by sal desc)-sal as "diff in sal" from employee;
+/*Compare salary with the next employee*/
+select full_name,sal,lead(sal)over(order by sal desc) as "next sal",sal-lead(sal)over(order by sal desc) as "diff in sal" from employee;
+/*Running total of salaries*/
+select full_name,DOJ,sal,sum(sal) over(order by doj) as "running total of sal" from employee;
