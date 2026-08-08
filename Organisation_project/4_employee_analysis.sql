@@ -17,7 +17,7 @@ Q8.Display employees in descending order of salary.
   SELECT full_name,SAL from employee  order by 2 DESC limit 5;
 Q9.Find employees whose first name starts with the letter 'A'.
 (Display their full names, email addresses, and departments.)
-  SELECT full_name,email,department from employee where full_name like "%A";
+  SELECT full_name,email,department from employee where full_name like "A%";
 
 Q10.Generate a department salary report.
 
