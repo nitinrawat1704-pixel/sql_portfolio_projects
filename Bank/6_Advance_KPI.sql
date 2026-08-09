@@ -60,4 +60,7 @@ SELECT
 FROM bank_transactions
 GROUP BY 
   1,2;
-		
+
+---------------------------------Quarter-over-Quarter Business-----------------------------------------------------------------------------------------------
+select quarter(transaction_date)"recent qtr",sum(transaction_amount),lag(sum(transaction_amount))over(order by sum(transaction_amount) desc) as "previous qtr" 
+	from bank_transactions group by 1 ;
