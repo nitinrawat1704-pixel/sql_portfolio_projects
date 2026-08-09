@@ -27,6 +27,9 @@
 -- 🏆 Best-Selling Productt
   select product_name,count(*) as "Best-Selling Product" from store_sales group by 1 having count(*) >1 limit 1;
 
+---Rank customers based on their total transaction amount. 
+select customer_name,sum(total_amount) ,rank() over(order by sum(total_amount) desc)from store_sales group by 1;
+
 -----------------------------------------------------------------------------weekly growth city wise---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 select city,week,weekly_sales,lag(weekly_sales) over (partition by city order by week) as "previous week sales",
