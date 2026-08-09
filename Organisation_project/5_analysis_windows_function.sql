@@ -24,3 +24,5 @@ select full_name,sal,lag(sal)over(order by sal desc) as "previous sal" ,lag(sal)
 select full_name,sal,lead(sal)over(order by sal desc) as "next sal",sal-lead(sal)over(order by sal desc) as "diff in sal" from employee;
 /*Running total of salaries*/
 select full_name,DOJ,sal,sum(sal) over(order by doj) as "running total of sal" from employee;
+/* Branch Performance Ranking*/
+select department,sum(sal),rank() over(order by sum(sal) desc) from employee group by 1 order by 2 desc;
