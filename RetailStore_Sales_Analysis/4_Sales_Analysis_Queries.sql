@@ -76,7 +76,11 @@
 	select sum(quantity*unit_price) as "amount before discount" from store_sales;
 
 28.	select customer_name from store_sales where payment_mode = "UPI";
+
 29.	select payment_mode,count(*) from store_sales group by payment_mode order by 2 desc limit 1;
+	select * from 
+	(select payment_channel,count(*),rank()over(order by count(*) desc) as rnk from bank_transactions group by 1)as t where rnk=1;
+
 30.	select * from store_sales where category = "furniture" and unit_price > 20000;
 31.	select customer_name from store_sales where age between 25 and 35;
 32.	select gender,count(*) from store_sales group by 1;
