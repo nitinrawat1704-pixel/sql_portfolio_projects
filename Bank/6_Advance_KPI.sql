@@ -64,3 +64,6 @@ GROUP BY
 ---------------------------------Quarter-over-Quarter Business-----------------------------------------------------------------------------------------------
 select quarter(transaction_date)"recent qtr",sum(transaction_amount),lag(sum(transaction_amount))over(order by sum(transaction_amount) desc) as "previous qtr" 
 	from bank_transactions group by 1 ;
+---------------------------------- Top 3 Customers From Each Branch-------------------------------------------------------------------------------------------
+select * from
+(select branch_name,customer_name,sum(balance_after_transaction),rank()over(partition by branch_name order by sum(balance_after_transaction) desc) as rnk from bank_transactions group by 1,2) as t where rnk <4;
