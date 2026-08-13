@@ -31,3 +31,7 @@ Q10.Generate a department salary report.
   from employee 
   group by 1 
   order by 2 desc ;
+
+
+Q11.Combine all employee names into one column for each department.
+  select department,group_concat(full_name) from employee group by 1;
