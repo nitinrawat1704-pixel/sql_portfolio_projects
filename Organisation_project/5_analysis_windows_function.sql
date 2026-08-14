@@ -26,3 +26,16 @@ select full_name,sal,lead(sal)over(order by sal desc) as "next sal",sal-lead(sal
 select full_name,DOJ,sal,sum(sal) over(order by doj) as "running total of sal" from employee;
 /* Branch Performance Ranking*/
 select department,sum(sal),rank() over(order by sum(sal) desc) from employee group by 1 order by 2 desc;
+
+
+/*Identify salary outliers within each department*/
+select full_name,department,sal,average,diff from 
+  (
+  select full_name,
+    department,
+    sal,avg(sal)over(partition by department ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as average,
+  sal-avg(sal)over(partition by department ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) as "diff"
+  from employee 
+  order by 5 asc)as t 
+where diff>0 
+order by 5 desc;
