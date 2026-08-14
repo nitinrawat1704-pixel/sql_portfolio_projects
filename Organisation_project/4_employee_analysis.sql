@@ -35,3 +35,7 @@ Q10.Generate a department salary report.
 
 Q11.Combine all employee names into one column for each department.
   select department,group_concat(full_name) from employee group by 1;
+
+Q12.HR wants to know how long each employee has been with the company.
+  select full_name,DOJ,timestampdiff(year ,DOJ,curdate()) as "Year", mod(timestampdiff(month ,DOJ,curdate()),12) as "month" from employee order by 3 desc;
+
