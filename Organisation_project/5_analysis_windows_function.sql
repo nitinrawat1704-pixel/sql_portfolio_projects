@@ -39,3 +39,13 @@ select full_name,department,sal,average,diff from
   order by 5 asc)as t 
 where diff>0 
 order by 5 desc;
+
+/* Find employees whose salary is greater than the previous employee*/
+
+select full_name,department,sal,lag(sal)over(order by sal desc) as "previous sal",
+ case
+when lag(sal)over(order by sal desc) is null then "First emp"
+when (sal > lag(sal)over(order by sal desc) ) > 0 then "Higher"
+when (lag(sal)over(order by sal desc)  = sal) Then "Same"
+else "Low" 
+end as sal_status from employee 
