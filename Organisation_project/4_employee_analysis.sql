@@ -39,3 +39,13 @@ Q11.Combine all employee names into one column for each department.
 Q12.HR wants to know how long each employee has been with the company.
   select full_name,DOJ,timestampdiff(year ,DOJ,curdate()) as "Year", mod(timestampdiff(month ,DOJ,curdate()),12) as "month" from employee order by 3 desc;
 
+Q13.Management wants to identify departments where the total salary expense exceeds ₹3,00,000.
+
+select 
+ department,
+ count(id),
+ sum(sal),
+ avg(sal) 
+from employee 
+group by 1 
+having sum(sal)>300000;
