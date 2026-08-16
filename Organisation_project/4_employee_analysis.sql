@@ -49,3 +49,14 @@ select
 from employee 
 group by 1 
 having sum(sal)>300000;
+
+Q14.Department's highest and lowest salary.
+
+select 
+	department,
+    max(sal)as highest,
+    min(sal) as lowest,
+    max(sal)-min(sal) as diff
+ from employee 
+ group by 1
+ order by 4 desc;
