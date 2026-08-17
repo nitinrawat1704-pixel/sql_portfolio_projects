@@ -67,3 +67,18 @@ select quarter(transaction_date)"recent qtr",sum(transaction_amount),lag(sum(tra
 ---------------------------------- Top 3 Customers From Each Branch-------------------------------------------------------------------------------------------
 select * from
 (select branch_name,customer_name,sum(balance_after_transaction),rank()over(partition by branch_name order by sum(balance_after_transaction) desc) as rnk from bank_transactions group by 1,2) as t where rnk <4;
+
+--------------------------------------Management wants to identify the top 3 branches in each state based on total transaction amount----------------------------------
+select * from
+( 
+ select 
+	state,
+	branch_name,
+    sum(transaction_amount) total_amount,
+    count(*) total_transaction,
+    avg(transaction_amount) avg_transaction,
+    rank()over(partition by state order by sum(transaction_amount) desc) as rnk 
+from bank_transactions 
+group by 1,2 
+order by 1,6
+) as t where rnk<4;
