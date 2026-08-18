@@ -82,3 +82,13 @@ from bank_transactions
 group by 1,2 
 order by 1,6
 ) as t where rnk<4;
+
+----------------------------------------------------------------state wise each transaction count--------------------------------------------------------------------------
+select state,
+count(case transaction_type
+when "Deposit" then 1 end) as "Deposit Count",
+count(case transaction_type
+when "Withdrawal" then 1 end) as "Withdrawal Count",
+count(case transaction_type
+when "Transfer" then 1 end) as "Transfer Count",
+count(*) as "Total Transaction Count" from bank_transactions group by 1 order by 1,3;
