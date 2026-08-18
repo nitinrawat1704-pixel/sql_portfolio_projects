@@ -26,3 +26,10 @@ CREATE TABLE card(
   booking_time INT,
   card_type    CHAR(1)
 );
+
+
+CREATE TABLE player(
+  team       CHAR(3),
+  playername VARCHAR(100),
+  pos        VARCHAR(3)
+);
