@@ -21,3 +21,42 @@ Q6. List the player and team (short code) for every goal scored in 'Vancouver'
 -- select goal.player,goal.team 
 -- from goal inner join game on goal.game=game.id
 -- where game.city="Vancouver";
+
+Q7.For each team playing on 2026-07-01, show the city and the teamname
+
+-- select city,teamname from game g inner join team t
+-- on t.id=g.team1 
+-- OR t.id = g.team2
+-- where played="2026-07-01";
+
+Q8.For every goal scored on '2026-07-02' show the teamname, and the player who scored
+-- select t.teamname,g.player
+-- from team t inner join goal g on t.id=g.team
+-- inner join game ga on g.game=ga.id 
+-- where ga.played='2026-07-02';
+
+Q9.For every goal scored in Mexico City show the date played, the player and that players position (pos)
+-- select
+-- game.played,goal.player,player.pos
+-- from game inner join goal on game.id=goal.game
+-- inner join  player on goal.player=player.playername
+-- where game.city="Mexico City";
+
+Q10.For each goal scored by a defender, show the player, their teamname.
+
+-- select player.playername, team.teamname
+-- from goal
+-- inner join  player on goal.player = player.playername
+-- join team
+-- on player.team = team.id
+-- where player.pos = 'DEF';
+
+
+Q11.For each goal scored in extra time, show the player, their position, teamname and city
+-- select
+-- goal.player,player.pos,team.teamname,game.city
+-- from
+-- goal inner join player on goal.player=player.playername
+-- inner join team on player.team=team.id
+-- inner join game on goal.game=game.id
+-- where goal.gtime between 91 and 120;
