@@ -92,3 +92,12 @@ when "Withdrawal" then 1 end) as "Withdrawal Count",
 count(case transaction_type
 when "Transfer" then 1 end) as "Transfer Count",
 count(*) as "Total Transaction Count" from bank_transactions group by 1 order by 1,3;
+
+
+--------------------------------------------------------------Last transaction of each branch-------------------------------------------------------------------------
+
+select branch_name,transaction_type,transaction_date from bank_transactions where transaction_date in
+(SELECT 
+    MAX(transaction_date) AS last_transaction_date
+FROM bank_transactions
+GROUP BY branch_name) order by 1;
