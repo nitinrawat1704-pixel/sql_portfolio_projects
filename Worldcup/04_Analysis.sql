@@ -60,3 +60,10 @@ Q11.For each goal scored in extra time, show the player, their position, teamnam
 -- inner join team on player.team=team.id
 -- inner join game on goal.game=game.id
 -- where goal.gtime between 91 and 120;
+
+Q12.List the player and the teamname for every goal scored in 'Vancouver'
+
+-- select goal.player,team.teamname
+-- from team inner join goal on team.id=goal.team
+-- inner join game on goal.game=game.id
+-- where game.city="Vancouver";
