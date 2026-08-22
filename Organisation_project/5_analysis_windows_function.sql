@@ -53,3 +53,8 @@ end as sal_status from employee
 /* nth salary of employee*/
 
 select distinct sal from employee order by sal DESC limit 1 offset 0;   --offset 0 will give 1 highest value and if we put 1 instead of 0 it will give 2nd highest value and so on.. 
+
+
+/*Compare each employee's salary with the first employee's salary*/
+select full_name,sal,first_value(sal)over(order by DOJ asc) as first_sal from employee;
+
