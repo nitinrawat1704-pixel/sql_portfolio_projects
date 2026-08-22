@@ -56,5 +56,5 @@ select distinct sal from employee order by sal DESC limit 1 offset 0;   --offset
 
 
 /*Compare each employee's salary with the first employee's salary*/
-select full_name,sal,first_value(sal)over(order by DOJ asc) as first_sal from employee;
+select full_name,sal,first_value(sal)over(order by DOJ asc) as first_sal,first_value(sal)over(order by DOJ asc) - sal as "diff in sal" from employee;
 
