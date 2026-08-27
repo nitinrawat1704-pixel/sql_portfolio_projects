@@ -42,4 +42,8 @@ concat(round((weekly_sales - lag(weekly_sales) over (partition by city order by 
 from(
 select city,week(order_date) as "week" ,sum(total_amount) as weekly_sales from store_sales group by 1,2 )as t;
 
+-----------------------------------------------------------------------------Customer who ordered every product---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+select customer_name from store_sales group by 1 having count(distinct product_name)=(
+select count(distinct product_name) from store_sales);
