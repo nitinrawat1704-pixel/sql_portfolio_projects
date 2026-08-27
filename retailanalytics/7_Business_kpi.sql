@@ -1,6 +1,11 @@
 
 Business Analytics 
 
+Highest sale was on which date ?
+	
+	select on_this_date,highest_sale from(
+	select date(order_date) on_this_date,sum(selling_price) highest_sale ,dense_rank() over(order by sum(selling_price) desc) as rnk
+ 	from items i inner join orders o on i.item_id = o.item_id group by 1 )as t where rnk=1;	
 
 Which category is most popular?
 
