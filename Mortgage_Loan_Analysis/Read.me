@@ -1,0 +1,121 @@
+# Mortgage Loan & Customer Analysis
+
+## Project Overview
+
+This project analyzes mortgage loan applications and customer information using **MySQL and Microsoft Excel**.
+
+The goal is to understand mortgage application performance, customer characteristics, loan trends, loan officer performance, and approval patterns.
+
+This is a fictional business dataset created for SQL and Business Analyst portfolio practice.
+
+## Tools Used
+
+* MySQL
+* Microsoft Excel
+
+## Current Database Structure
+
+The project currently contains three tables:
+
+### 1. Customers
+
+Stores customer and financial information.
+
+Key information includes:
+
+* Customer details
+* State
+* Annual income
+* Employment status
+* Credit score
+* First-time buyer status
+
+### 2. Loan Officers
+
+Stores information about mortgage loan officers.
+
+Key information includes:
+
+* Officer name
+* Region
+
+### 3. Loan Applications
+
+Stores mortgage application information.
+
+Key information includes:
+
+* Application date
+* Loan type
+* Loan amount
+* Property value
+* Monthly debt
+* Application status
+* Funding date
+
+## Table Relationships
+
+```text
+Customers
+    |
+    | customer_id
+    |
+Loan Applications
+    |
+    | officer_id
+    |
+Loan Officers
+```
+
+## Project Goals
+
+The analysis will eventually answer questions related to:
+
+* Mortgage application volume
+* Approval and rejection rates
+* Funded loan amounts
+* Loan type performance
+* Customer credit scores
+* Customer income and debt
+* Loan-to-Value (LTV)
+* Debt-to-Income (DTI)
+* Loan officer performance
+* Regional performance
+* Monthly application trends
+
+## Project Status
+
+### Completed
+
+* Database created
+* Database tables designed
+* Primary and foreign keys established
+* Sample mortgage data created
+* Customers, loan officers, and loan applications populated
+
+### In Progress
+
+* SQL business analysis
+* Advanced SQL queries
+* Excel analysis
+* Excel dashboard
+* Business insights and recommendations
+
+## Future Analysis
+
+The SQL analysis will progress from basic queries to advanced concepts including:
+
+* Aggregations
+* Joins
+* CASE statements
+* CTEs
+* Subqueries
+* Window functions
+* Ranking
+* LAG / LEAD
+* Running totals
+* Month-over-month analysis
+
+## Disclaimer
+
+This project uses fictional data and is created solely for learning, portfolio development, and SQL/Excel practice.
