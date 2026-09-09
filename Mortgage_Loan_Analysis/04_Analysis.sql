@@ -155,7 +155,6 @@ select application_status,avg(loan_amount) from loan_application  group by 1 hav
 
 -- Q35. Find the loan officer with the highest total loan amount handled.-- 
 
-select officer_name,sum() from loan_officer o inner join loan_application a on o.officer_id=a.officer_id
 select * from
 (
 select officer_name,sum(loan_amount) total,dense_rank()over(order by sum(loan_amount) desc) as rnk from 
@@ -163,3 +162,54 @@ loan_application a inner join loan_officer o
 on a.officer_id=o.officer_id
 group by 1
 )as t where rnk=1
+
+-- Q36 Find the average loan amount for each loan type, but return only loan types whose average loan amount is greater than ₹40 lakh.-- 
+
+select loan_type,avg(loan_amount) from loan_application group by 1 having avg(loan_amount)>4000000;
+
+with cte as (select loan_type,avg(loan_amount) a from loan_application group by 1 )
+select loan_type,a from cte where a>4000000;
+
+-- Q37 Find all customers whose credit score is higher than the overall average credit score.
+
+select customer_name from customers where credit_score>(select avg(credit_score) from customers);
+
+
+-- Q38 Find the top 5 customers by total loan amount applied.
+
+select customer_name,Total_loan_amount from(
+select customer_name,sum(loan_amount) as "Total_loan_amount",dense_rank()over(order by sum(loan_amount) desc) as rnk from loan_application a inner join customers c on a.customer_id=c.customer_id group by 1) as t where rnk <6 order by 2 desc;
+
+with cte as 
+(
+select customer_name,sum(loan_amount) as "Total_loan_amount",dense_rank()over(order by sum(loan_amount) desc) as rnk from loan_application a inner join customers c on a.customer_id=c.customer_id group by 1
+)
+select customer_name,Total_loan_amount from cte where rnk<6 order by rnk asc;
+
+
+-- Q39 For each customer, assign a row number to their loan applications based on application_date, with the latest application = 1.
+
+select customer_id,application_id,application_date,row_number()over(partition by customer_id order by application_date desc) as "row_number" 
+from loan_application;
+
+--  Q40 find the latest application of every customer.
+
+with cte as(
+select customer_id,application_id,application_date,application_status,row_number()over(partition by customer_id order by application_date desc) as "rw_number" 
+from loan_application)
+select customer_id,application_id,application_date,application_status from cte where rw_number=1;
+
+-- Q41 For each loan officer, show their applications along with the previous application's loan amount.
+
+select officer_id,application_id,application_date,application_status,loan_amount,
+lag(loan_amount)over(partition by officer_id order by application_date asc) as "Previous application loan amount"
+ from loan_application;
+ 
+ -- Q42 Find the number of loan applications submitted each month.
+ 
+ select DATE_FORMAT(application_date,'%Y-%m'),count(application_id) from loan_application group by 1 order by 2 desc;
+ 
+ -- Q43 Find the monthly application count and the previous month's application count.
+ 
+  select DATE_FORMAT(application_date,'%Y-%m'),count(application_id),LAG(COUNT(*)) OVER(ORDER BY DATE_FORMAT(application_date,'%Y-%m')) as previous_month
+  from loan_application group by 1 ;
