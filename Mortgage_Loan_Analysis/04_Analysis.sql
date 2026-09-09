@@ -103,3 +103,48 @@ select customer_name,mi,d,d/mi*100 as DTI from cte having d/mi*100>40;
 with cte as(
 select employment_status,customer_name,(annual_income/12) as mi,monthly_debt d from loan_application a inner join customers c on a.customer_id=c.customer_id)
 select employment_status,avg(d/mi*100) as average_DTI from cte group by 1;
+
+-- Q26. Find the approval rate as a percentage of total applications.
+
+select concat(((select count(*) from loan_application where application_status="Approved")/count(*))*100,"%") as "Approval rate percentage" from loan_application ;
+
+-- Q27. Find the rejection rate as a percentage of total applications.
+
+select concat(((select count(*) from loan_application where application_status="Rejected")/count(*))*100,"%") as "Rejection rate percentage" from loan_application ;
+
+
+-- Q28. Find the approval rate by loan type.
+
+select loan_type,(count(*)/(select count(*) from loan_application))*100from loan_application where application_status="Approved" group by 1;
+
+-- Q29. Find the average loan amount for Approved applications.
+
+select application_status,round(avg(loan_amount),2) as average_loan_amount from loan_application where application_status="Approved";
+
+-- Q30. Find the maximum loan amount for each loan type.
+
+select loan_type,max(loan_amount) from loan_application group by 1 ;
+
+-- Q31. Find loan applications where the LTV is between 70% and 80%. 
+
+select *,round((loan_amount/property_value)*100,2) as LTV from loan_application  where (loan_amount/property_value)*100  between 70 and 80;
+
+-- Q32. Categorize applications based on LTV:
+
+select *,(loan_amount/property_value)*100 as LTV,
+case 
+when (loan_amount/property_value)*100 < 70 then "LOW"
+when (loan_amount/property_value)*100 between 70 and 80 then "MEDIUM"
+else "HIGH"
+end
+as LTI_grade from loan_application ; 
+
+-- Q33. Categorize customers based on credit score:
+
+select customer_name,credit_score,
+case when credit_score<700 then "low"
+when credit_score between 700 and 749 then "good"
+when credit_score between 750 and 799 then "very good"
+else "Excellent"
+end as Customer_Grade
+from customers;
