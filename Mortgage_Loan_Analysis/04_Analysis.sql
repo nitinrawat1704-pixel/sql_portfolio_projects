@@ -148,3 +148,18 @@ when credit_score between 750 and 799 then "very good"
 else "Excellent"
 end as Customer_Grade
 from customers;
+
+-- Q34. Find the average loan amount by application status, but show only statuses where the average loan amount is greater than 4,000,000.
+
+select application_status,avg(loan_amount) from loan_application  group by 1 having avg(loan_amount)>4000000;
+
+-- Q35. Find the loan officer with the highest total loan amount handled.-- 
+
+select officer_name,sum() from loan_officer o inner join loan_application a on o.officer_id=a.officer_id
+select * from
+(
+select officer_name,sum(loan_amount) total,dense_rank()over(order by sum(loan_amount) desc) as rnk from 
+loan_application a inner join loan_officer o
+on a.officer_id=o.officer_id
+group by 1
+)as t where rnk=1
