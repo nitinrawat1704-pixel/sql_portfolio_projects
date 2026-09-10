@@ -213,3 +213,103 @@ lag(loan_amount)over(partition by officer_id order by application_date asc) as "
  
   select DATE_FORMAT(application_date,'%Y-%m'),count(application_id),LAG(COUNT(*)) OVER(ORDER BY DATE_FORMAT(application_date,'%Y-%m')) as previous_month
   from loan_application group by 1 ;
+
+-- Q44 — Approval Rate by Month
+
+with cte as 
+(
+select date_format(application_date,"%Y-%M") m,
+count(application_id) t_a,
+sum(case when application_status="Approved" then 1
+else 0 end) as a_a
+from loan_application group by 1
+)
+select m as application_month,t_a as total_applications,a_a as approved_applications,concat(((a_a/t_a)*100),"%") as approval_rate from cte;
+
+-- Q45 — MoM Approval Rate Change
+
+with cte as 
+(
+select date_format(application_date,"%y-%m") m,
+count(application_id) t_a,
+sum(case when application_status="Approved" then 1
+else 0 end) as a_a
+from loan_application group by 1
+)
+select m as application_month,
+t_a as total_applications,
+a_a as approved_applications,
+concat(round(((a_a/t_a)*100),2),"%") as approval_rate,
+lag(concat(round((a_a/t_a)*100,2),'%'))over( order by m ) as previous_month_approval_rate
+from cte;
+
+-- Q46 Calculate monthly applications and the percentage growth compared with the previous month.
+
+with cte as
+(
+select date_format(application_date,"%Y-%m") as d,count(*) as cm,lag(count(*))over(order by  date_format(application_date,"%Y-%m")) as pm
+from loan_application group by 1
+)
+select d as month,cm as application_count,pm as previous_month_count,(((cm-pm)/pm)*100) as growth_percentage from cte;
+
+-- Q47 Find the total loan amount handled by each officer for each month.
+
+select officer_name,date_format(application_date,"%Y-%M"),sum(loan_amount)
+from loan_officer o inner join loan_application a on o.officer_id=a.officer_id group by 1,2;
+
+-- Q48 identify the top-performing loan officer for each month based on total loan amount.
+
+select * from(select officer_name,date_format(application_date,"%y-%m") d,sum(loan_amount),
+dense_rank()over(partition by date_format(application_date,"%y-%m") order by sum(loan_amount) desc) as rnk
+from loan_officer o inner join loan_application a on o.officer_id=a.officer_id group by 1,2) as t where rnk=1 order by d asc;
+
+
+-- Q49 Which officer had the highest loan amount in each month, and how many months did each officer lead?
+
+with cte as(
+select * from(
+select officer_name,date_format(application_date,"%y-%b") d,sum(loan_amount) as s ,
+dense_rank()over(partition by date_format(application_date,"%y-%b") order by sum(loan_amount) desc) as rnk
+from loan_officer o inner join loan_application a on o.officer_id=a.officer_id group by 2,1)as t where rnk=1
+)select officer_name,count(*) months_as_top_officer,sum(s)total_leading_month_amount,group_concat(d) months_led from cte group by 1 order by 3 desc;
+
+-- Q50 Calculate the running total of loan amount over time.
+
+with cte as 
+(
+    SELECT DATE_FORMAT(application_date,'%Y-%m') AS mnth,
+           SUM(loan_amount) AS monthly_loan_amount
+    FROM loan_application
+    GROUP BY 1
+)
+select mnth,monthly_loan_amount,sum(monthly_loan_amount)over(order by mnth) as running_total from cte;
+
+-- Q51 Find customers who have submitted more than one loan application
+
+select c.customer_id,customer_name,count(application_id) as application_count
+from customers c inner join loan_application a on c.customer_id=a.customer_id 
+group by 1,2 HAVING COUNT(*)>1;
+
+-- Q52 For every customer who has multiple applications, calculate the number of days between their first and latest application.
+
+with cte as(
+select customer_name,min(application_date) as first_application,max(application_date) as last_application
+from customers c inner join loan_application a on c.customer_id=a.customer_id 
+group by 1
+HAVING COUNT(application_id)>1
+)
+select customer_name,first_application,last_application,DATEDIFF(last_application , first_application) as days_between from cte;
+
+-- Q53 For funded applications only, calculate the processing time:
+
+select application_id,application_date,funding_date,datediff(funding_date,application_date) as processing_days 
+from loan_application where funding_date is not null ;
+
+-- Q54 Calculate the average processing time for each loan officer, using only applications that have been funded.
+
+select officer_name,round(avg(datediff(funding_date,application_date))) as average_processing_days 
+from loan_application a inner join loan_officer o on a.officer_id=o.officer_id
+where funding_date is not null 
+group by 1
+order by 1
+
