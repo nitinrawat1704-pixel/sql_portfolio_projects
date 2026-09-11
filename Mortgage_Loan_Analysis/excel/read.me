@@ -1,0 +1,182 @@
+# Mortgage Loan Analysis — Excel
+
+## Overview
+
+This folder contains the Excel component of the **Mortgage Loan Analysis** project.
+
+The Excel analysis was built using data stored in **MySQL**. The business-analysis queries developed in MySQL were connected to Excel using **ODBC and Power Query**, allowing the analysis results to be imported into separate Excel worksheets for reporting and dashboard development.
+
+---
+
+## Tools Used
+
+* MySQL
+* MySQL ODBC Connector
+* Microsoft Excel
+* Power Query
+
+---
+
+## 1. Establishing the ODBC Connection
+
+To connect MySQL with Excel, a **MySQL ODBC Data Source Name (DSN)** was created.
+
+### ODBC Configuration
+
+The DSN used for this project was:
+
+`MySQL_Excel`
+
+The ODBC connection was configured with the MySQL server details and database credentials.
+
+The project database used was:
+
+`mortage`
+
+> Note: The database was created with the name `mortage` in MySQL.
+
+After configuring the DSN, the connection was tested to ensure that Excel could communicate with the MySQL database.
+
+---
+
+## 2. Connecting Excel to MySQL
+
+The MySQL ODBC connection was accessed through Excel's data connection functionality.
+
+The connection was initially established through:
+
+**Data → Get Data → From Other Sources → From ODBC**
+
+The configured DSN `MySQL_Excel` was selected.
+
+The MySQL database was then selected as the source for the Excel analysis.
+
+---
+
+## 3. Using Power Query
+
+Power Query was used to import the results of the SQL business-analysis queries directly into Excel.
+
+Instead of manually copying the results from MySQL, SQL queries were executed through the ODBC connection using Power Query.
+
+The connection string used was:
+
+```text
+dsn=MySQL_Excel;DATABASE=mortage
+```
+
+The SQL query was then passed through Power Query using `Odbc.Query()`.
+
+Example:
+
+```powerquery
+let
+    Source = Odbc.Query(
+        "dsn=MySQL_Excel;DATABASE=mortage",
+        "
+        SELECT 
+            loan_type,
+            COUNT(*) AS application_count
+        FROM loan_application
+        GROUP BY 1;
+        "
+    )
+in
+    Source
+```
+
+This approach allowed the SQL analysis to remain in MySQL while Excel was used as the reporting and visualization layer.
+
+---
+
+## 4. Power Query Workflow
+
+The workflow followed for the Excel analysis was:
+
+**MySQL Database**
+
+↓
+
+**SQL Business Analysis Queries**
+
+↓
+
+**MySQL ODBC Connection**
+
+↓
+
+**Power Query**
+
+↓
+
+**Excel Worksheets**
+
+↓
+
+**Dashboard & Visualization**
+
+Power Query was also useful for keeping the Excel workbook connected to the underlying MySQL analysis rather than relying entirely on manually exported data.
+
+---
+
+## 5. Excel Analysis Sheets
+
+The business-analysis queries were organized into dedicated Excel worksheets.
+
+| SQL Query | Analysis                     | Excel Sheet          |
+| --------- | ---------------------------- | -------------------- |
+| Q1        | Application by Status        | KPI_Data             |
+| Q2        | Application by Loan Type     | Loan_Type            |
+| Q3        | Monthly Approval Rate        | Monthly_Trends       |
+| Q4        | Monthly Application Growth   | Monthly_Trends       |
+| Q5        | Credit Score Approval Rate   | Credit_Risk          |
+| Q6        | High-Risk Applications       | High_Risk            |
+| Q7        | Officer Quality vs Volume    | Officer_Performance  |
+| Q8        | Region Performance           | Regional_Performance |
+| Q9        | Funding Conversion           | KPI_Data             |
+| Q10       | Processing Time by Loan Type | Funding              |
+| Q11       | Monthly Funding Performance  | Funding              |
+| Q12       | Risk Category                | Credit_Risk          |
+
+---
+
+## 6. Why ODBC + Power Query?
+
+The combination of MySQL, ODBC and Power Query provides a structured workflow:
+
+* **MySQL** was used for data storage and SQL-based analysis.
+* **ODBC** provided the connection between MySQL and Excel.
+* **Power Query** was used to execute/import SQL analysis results into Excel.
+* **Excel** was used for reporting, visualization and dashboard development.
+
+This approach also makes the analysis easier to refresh if the underlying MySQL data changes.
+
+---
+
+## 7. Dashboard
+
+The `Dashboard` worksheet was created as the final reporting layer.
+
+The planned dashboard includes:
+
+### KPI Cards
+
+* Total Applications
+* Approval Rate
+* Approved Loan Amount
+* Funded Loan Amount
+* Funding Conversion Rate
+* Average Processing Days
+
+### Visualizations
+
+* Applications by Status
+* Applications by Loan Type
+* Monthly Application Trend
+* Monthly Approval Rate
+* Regional Performance
+* Officer Performance
+* Credit/Risk Performance
+* Monthly Funding Trend
+
+The dashboard will be finalized after completing the underlying Excel analysis and data connections.
